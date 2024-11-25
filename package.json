@@ -21,7 +21,7 @@
     "@types/node": "^22.9.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/tsconfig": "^0.5.1",
-    "npm-run-all2": "^6.2.0",
+    "npm-run-all2": "^7.0.1",
     "prettier": "^3.3.3",
     "typescript": "~5.5.4",
     "unplugin-vue-router": "^0.10.7",
