@@ -1,91 +1,70 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { useRouter } from 'vue-router'
+import { useRouteQueryValue } from './composables/router'
+
+const searchText = useRouteQueryValue<string>('q')
+const router = useRouter()
+async function goToSearch() {
+  await router.push({
+    name: '/search',
+    query: {
+      q: searchText.value,
+    },
+  })
+}
 </script>
 
 <template>
   <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+        <RouterLink to="/" class="font-serif text-xl font-light btn btn-ghost"
+          >Art Gallery</RouterLink
+        >
+      </div>
+      <div class="flex-none gap-2">
+        <form class="form-control" @submit.prevent="goToSearch()">
+          <div class="join">
+            <input
+              type="text"
+              placeholder="Search Artworks"
+              v-model="searchText"
+              class="w-24 input input-bordered join-item md:w-auto"
+            />
+            <button
+              type="submit"
+              class="border-l-0 btn join-item btn-square input-bordered"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-4 h-4 opacity-70"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </form>
+        <ul class="px-1 menu menu-horizontal">
+          <li>
+            <details>
+              <summary>Art & Artists</summary>
+              <ul class="p-2 rounded-t-none bg-base-100">
+                <li><RouterLink to="#TODO:">Artworks</RouterLink></li>
+                <li><RouterLink to="#TODO:">Artists</RouterLink></li>
+              </ul>
+            </details>
+          </li>
+          <li><RouterLink to="/about">About</RouterLink></li>
+        </ul>
+      </div>
     </div>
   </header>
 
   <RouterView />
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>

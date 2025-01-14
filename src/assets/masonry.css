@@ -1,0 +1,54 @@
+.masonry {
+  column-count: 4;
+  column-gap: 10px;
+}
+
+.masonry img {
+  max-width: 100%;
+  display: block;
+  margin-bottom: 0;
+}
+
+.masonry figure {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  margin-bottom: 10px;
+  break-inside: avoid;
+}
+
+.masonry figure > img {
+  grid-row: 1 / -1;
+  grid-column: 1;
+}
+
+.masonry figure a {
+  color: black;
+  text-decoration: none;
+}
+
+.masonry figcaption {
+  grid-row: 2;
+  grid-column: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.2em 0.5em;
+  justify-self: start;
+}
+
+@media screen and (max-width: 1024px) {
+  .masonry {
+    column-count: 3;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .masonry {
+    column-count: 2;
+  }
+}
+
+@media screen and (max-width: 472px) {
+  .masonry {
+    column-count: 1;
+  }
+}

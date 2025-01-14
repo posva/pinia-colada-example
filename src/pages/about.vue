@@ -1,15 +1,21 @@
+<script lang="ts">
+import { defineColadaLoader } from 'unplugin-vue-router/data-loaders/pinia-colada'
+
+export const useTestData = defineColadaLoader({
+  async query() {
+    return { message: 'Hello World' }
+  },
+  key: () => ['message'],
+})
+</script>
+
+<script setup lang="ts">
+const { data: message } = useTestData()
+</script>
+
 <template>
   <div class="about">
     <h1>This is an about page</h1>
+    <p>{{ message }}</p>
   </div>
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

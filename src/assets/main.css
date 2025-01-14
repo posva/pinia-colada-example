@@ -1,35 +1,54 @@
-@import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+.loader {
+  width: 55px;
+  aspect-ratio: 1;
+  --g1: conic-gradient(from 90deg at 3px 3px, #0000 90deg, #fff 0);
+  --g2: conic-gradient(from -90deg at 22px 22px, #0000 90deg, #fff 0);
+  background: var(--g1), var(--g1), var(--g1), var(--g2), var(--g2), var(--g2);
+  background-size: 25px 25px;
+  background-repeat: no-repeat;
+  animation: l7 1.5s infinite;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+@keyframes l7 {
+  0% {
+    background-position:
+      0 0,
+      0 100%,
+      100% 100%;
+  }
+  25% {
+    background-position:
+      100% 0,
+      0 100%,
+      100% 100%;
+  }
+  50% {
+    background-position:
+      100% 0,
+      0 0,
+      100% 100%;
+  }
+  75% {
+    background-position:
+      100% 0,
+      0 0,
+      0 100%;
+  }
+  100% {
+    background-position:
+      100% 100%,
+      0 0,
+      0 100%;
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+hr {
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
