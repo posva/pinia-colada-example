@@ -19,7 +19,7 @@ const { state: artworks } = useQuery({
 
     <hr class="mb-8" />
 
-    <div v-if="artworks.status === 'pending'" class="loader"></div>
+    <div v-if="artworks.status === 'pending'" class="loader mx-auto my-4"></div>
     <div v-else-if="artworks.status === 'error'">
       <h2>Unexpected Error</h2>
       <pre>{{ artworks.error }}</pre>

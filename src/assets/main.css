@@ -5,8 +5,9 @@
 .loader {
   width: 55px;
   aspect-ratio: 1;
-  --g1: conic-gradient(from 90deg at 3px 3px, #0000 90deg, #fff 0);
-  --g2: conic-gradient(from -90deg at 22px 22px, #0000 90deg, #fff 0);
+  --g1: conic-gradient(from 90deg at 3px 3px, #3d3d3d 90deg, #000000 0);
+  /* --g1: conic-gradient(from 90deg at 3px 3px, #0000 90deg, #fff 0); */
+  --g2: conic-gradient(from -90deg at 22px 22px, #0000 90deg, #3d3d3d 0);
   background: var(--g1), var(--g1), var(--g1), var(--g2), var(--g2), var(--g2);
   background-size: 25px 25px;
   background-repeat: no-repeat;

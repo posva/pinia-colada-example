@@ -1,20 +1,21 @@
-<script lang="ts">
+<script lang="ts" setup>
 import {
   useArtworkDetails,
   useArtworkRelatedArtworks,
 } from '@/queries/artwork-details'
-export { useArtworkDetails, useArtworkRelatedArtworks }
-</script>
+import ArtworkCard from '@/components/ArtworkCard.vue'
 
-<script lang="ts" setup>
-const { data: artwork } = useArtworkDetails()
-const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
+const { state: artwork } = useArtworkDetails()
+const { state: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
   useArtworkRelatedArtworks()
 </script>
 
 <template>
-  <h1 class="sr-only">{{ artwork.title }}</h1>
-  <header v-if="artwork.image_url" class="px-6 pb-10 space-y-2 bg-gray-100">
+  <h1 class="sr-only">{{ artwork.data?.title }}</h1>
+  <header
+    v-if="artwork.data?.image_url"
+    class="px-6 pb-10 space-y-2 bg-gray-100"
+  >
     <!-- TODO: responsive size -->
     <div
       class="h-[calc(100vh-180px)] max-h-[860px] min-h-[720px] flex justify-center pt-12 pb-14"
@@ -23,18 +24,20 @@ const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
         class="w-full h-full max-w-[843px] max-h-[843px] m-auto flex justify-center"
       >
         <img
-          :key="artwork.image_url"
-          :src="artwork.image_url"
-          :alt="artwork.thumbnail?.alt_text"
+          :key="artwork.data.image_url"
+          :src="artwork.data.image_url"
+          :alt="artwork.data.thumbnail?.alt_text"
           class="object-contain"
         />
       </div>
     </div>
 
     <div class="flex justify-between px-16 space-x-2 text-gray-500">
-      <span v-if="artwork.is_public_domain">CC0 Public Domain Designation</span>
-      <span v-else-if="artwork.copyright_notice">{{
-        artwork.copyright_notice
+      <span v-if="artwork.data.is_public_domain"
+        >CC0 Public Domain Designation</span
+      >
+      <span v-else-if="artwork.data.copyright_notice">{{
+        artwork.data.copyright_notice
       }}</span>
       <div class="flex-grow"></div>
       <div>
@@ -46,17 +49,17 @@ const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
   <div>
     <div class="flex flex-col pt-6 mx-auto prose">
       <span class="mt-6 font-serif text-4xl" aria-hidden="true">{{
-        artwork.title
+        artwork.data?.title
       }}</span>
 
       <h2 class="sr-only">Date:</h2>
-      <p>{{ artwork.date_display }}</p>
+      <p>{{ artwork.data?.date_display }}</p>
 
       <h2 class="sr-only">Artist:</h2>
-      <p>{{ artwork.artist_display }}</p>
+      <p>{{ artwork.data?.artist_display }}</p>
 
       <h2 class="sr-only">About this artwork:</h2>
-      <div v-html="artwork.description"></div>
+      <div v-html="artwork.data?.description"></div>
     </div>
 
     <dl class="grid mx-auto my-6 max-w-prose">
@@ -64,10 +67,10 @@ const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
         <h2>Artist</h2>
       </dt>
       <dd>
-        <template v-if="artwork.artist_titles.length > 0">
+        <template v-if="artwork.data?.artist_titles.length">
           <!-- TODO: handle multiple artists -->
-          <a :href="`#${artwork.artist_ids[0]}`">{{
-            artwork.artist_titles[0]
+          <a :href="`#${artwork.data.artist_ids[0]}`">{{
+            artwork.data.artist_titles[0]
           }}</a>
         </template>
         <span v-else>Unknown</span>
@@ -77,72 +80,72 @@ const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
         <h2>Title</h2>
       </dt>
       <dd>
-        <span>{{ artwork.title }}</span>
+        <span>{{ artwork.data?.title }}</span>
       </dd>
 
       <dt>
         <h2>Place</h2>
       </dt>
       <dd>
-        <span>{{ artwork.place_of_origin }}</span>
+        <span>{{ artwork.data?.place_of_origin }}</span>
       </dd>
 
       <dt>
         <h2>Date</h2>
       </dt>
       <dd>
-        <span>{{ artwork.date_display }}</span>
+        <span>{{ artwork.data?.date_display }}</span>
       </dd>
 
       <dt>
         <h2>Medium</h2>
       </dt>
       <dd>
-        <span>{{ artwork.medium_display }}</span>
+        <span>{{ artwork.data?.medium_display }}</span>
       </dd>
 
-      <template v-if="artwork.inscriptions">
+      <template v-if="artwork.data?.inscriptions">
         <dt>
           <h2>Inscriptions</h2>
         </dt>
         <dd>
-          <span>{{ artwork.inscriptions }}</span>
+          <span>{{ artwork.data.inscriptions }}</span>
         </dd>
       </template>
 
-      <template v-if="artwork.dimensions">
+      <template v-if="artwork.data?.dimensions">
         <dt>
           <h2>Dimensions</h2>
         </dt>
         <dd>
-          <span>{{ artwork.dimensions }}</span>
+          <span>{{ artwork.data.dimensions }}</span>
         </dd>
       </template>
 
-      <template v-if="artwork.credit_line">
+      <template v-if="artwork.data?.credit_line">
         <dt>
           <h2>Credit Line</h2>
         </dt>
         <dd>
-          <span>{{ artwork.credit_line }}</span>
+          <span>{{ artwork.data.credit_line }}</span>
         </dd>
       </template>
 
-      <template v-if="artwork.main_reference_number">
+      <template v-if="artwork.data?.main_reference_number">
         <dt>
           <h2>Reference Number</h2>
         </dt>
         <dd>
-          <span>{{ artwork.main_reference_number }}</span>
+          <span>{{ artwork.data.main_reference_number }}</span>
         </dd>
       </template>
 
-      <template v-if="artwork.copyright_notice">
+      <template v-if="artwork.data?.copyright_notice">
         <dt>
           <h2>Copyright</h2>
         </dt>
         <dd>
-          <span>{{ artwork.copyright_notice }}</span>
+          <span>{{ artwork.data.copyright_notice }}</span>
         </dd>
       </template>
     </dl>
@@ -153,31 +156,37 @@ const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
   <div class="mx-auto prose">
     <div
       class="collapse collapse-plus"
-      v-if="artwork.publication_history.length > 0"
+      v-if="artwork.data?.publication_history.length"
     >
       <input type="checkbox" />
       <h3 class="px-0 m-0 uppercase collapse-title">Publication History</h3>
       <ul class="collapse-content">
-        <li v-for="entry in artwork.publication_history" v-html="entry"></li>
+        <li
+          v-for="entry in artwork.data.publication_history"
+          v-html="entry"
+        ></li>
       </ul>
     </div>
 
     <div
       class="collapse collapse-plus"
-      v-if="artwork.exhibition_history.length > 0"
+      v-if="artwork.data?.exhibition_history.length"
     >
       <input type="checkbox" />
       <h3 class="px-0 m-0 uppercase collapse-title">Exhibition History</h3>
       <ul class="collapse-content">
-        <li v-for="entry in artwork.exhibition_history" v-html="entry"></li>
+        <li
+          v-for="entry in artwork.data.exhibition_history"
+          v-html="entry"
+        ></li>
       </ul>
     </div>
 
-    <div class="collapse collapse-plus" v-if="artwork.provenance_text">
+    <div class="collapse collapse-plus" v-if="artwork.data?.provenance_text">
       <input type="checkbox" />
       <h3 class="px-0 m-0 uppercase collapse-title">Provenance</h3>
       <p class="collapse-content">
-        {{ artwork.provenance_text }}
+        {{ artwork.data.provenance_text }}
       </p>
     </div>
   </div>
@@ -188,16 +197,13 @@ const { data: relatedArtwork, isLoading: isLoadingRelatedArtworks } =
     <h3 class="sr-only">Related artworks</h3>
 
     <div>
-      <div
-        class="flex justify-center"
-        v-if="!isNavigating && isLoadingRelatedArtworks"
-      >
+      <div class="flex justify-center" v-if="isLoadingRelatedArtworks">
         <div class="m-12 loading loading-spinner loading-lg"></div>
       </div>
 
-      <div class="masonry" v-else-if="relatedArtwork">
+      <div class="masonry" v-else-if="relatedArtwork.data">
         <ArtworkCard
-          v-for="artwork in relatedArtwork.data"
+          v-for="artwork in relatedArtwork.data.data"
           :key="artwork.id"
           :artwork="artwork"
         />

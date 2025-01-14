@@ -60,7 +60,9 @@ async function goToSearch() {
               </ul>
             </details>
           </li>
-          <li><RouterLink to="/about">About</RouterLink></li>
+          <li>
+            <a href="https://github.com/posva/pinia-colada-example">GitHub</a>
+          </li>
         </ul>
       </div>
     </div>
