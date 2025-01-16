@@ -60,9 +60,9 @@ export const useArtworkSearchResults = defineQuery(() => {
         q: String(route.query.q),
         page: filters.value.page,
         limit: 12,
-        // term: {
-        //   is_public_domain: filters.value.is_public_domain,
-        // },
+        term: {
+          //   is_public_domain: filters.value.is_public_domain,
+        },
       })
     },
     placeholderData: (oldData) => oldData,

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { ArtworkCardInfo } from '@/api/artworks'
-import { computed } from 'vue'
+import { debouncedRef } from '@vueuse/core'
+import { computed, ref, useTemplateRef, watch, watchEffect } from 'vue'
 
 const props = defineProps<{
   artwork: ArtworkCardInfo
@@ -8,6 +9,26 @@ const props = defineProps<{
 
 const aspectRatio = computed(() => {
   return `${props.artwork.thumbnail?.width ?? 1} / ${props.artwork.thumbnail?.height ?? 1}`
+})
+
+const fullResImg = useTemplateRef('fullResImg')
+
+const $showInitialBlur = ref(true)
+const showInitialBlur = debouncedRef($showInitialBlur, 100)
+// each time the artwork changes, schedule showing the blur
+watch(
+  () => props.artwork.id,
+  () => {
+    $showInitialBlur.value = true
+  }
+)
+watch(fullResImg, (img) => {
+  if (!img) return
+  img.onload = () => {
+    console.log('✅ onload', fullResImg.value)
+    // we don't want to show it anymore
+    $showInitialBlur.value = false
+  }
 })
 </script>
 
@@ -21,13 +42,15 @@ const aspectRatio = computed(() => {
     }"
   >
     <figure :title="artwork.title">
-      <div v-if="artwork.thumbnail" class="img-loader">
+      <div class="img-loader">
         <img
           v-if="artwork.image_url"
+          ref="fullResImg"
           class="full-res"
           :src="artwork.image_url"
         />
         <img
+          v-if="artwork.thumbnail"
           class="img-frozen"
           :src="artwork.thumbnail.lqip"
           :alt="artwork.thumbnail.alt_text"
@@ -88,7 +111,7 @@ const aspectRatio = computed(() => {
 }
 
 .img-loader > .full-res {
-  animation: 0.2s ease-in 0.4s 1 forwards fade;
+  animation: 0.2s ease-in 0s 1 forwards fade;
   opacity: 0;
 }
 
