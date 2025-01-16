@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { ArtworkCardInfo } from '@/api/artworks'
-import { debouncedRef } from '@vueuse/core'
-import { computed, ref, useTemplateRef, watch, watchEffect } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
   artwork: ArtworkCardInfo
@@ -9,26 +8,6 @@ const props = defineProps<{
 
 const aspectRatio = computed(() => {
   return `${props.artwork.thumbnail?.width ?? 1} / ${props.artwork.thumbnail?.height ?? 1}`
-})
-
-const fullResImg = useTemplateRef('fullResImg')
-
-const $showInitialBlur = ref(true)
-const showInitialBlur = debouncedRef($showInitialBlur, 100)
-// each time the artwork changes, schedule showing the blur
-watch(
-  () => props.artwork.id,
-  () => {
-    $showInitialBlur.value = true
-  }
-)
-watch(fullResImg, (img) => {
-  if (!img) return
-  img.onload = () => {
-    console.log('✅ onload', fullResImg.value)
-    // we don't want to show it anymore
-    $showInitialBlur.value = false
-  }
 })
 </script>
 
