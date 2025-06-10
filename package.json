@@ -12,15 +12,15 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
-    "@pinia/colada": "^0.16.1",
-    "@vueuse/core": "^13.2.0",
+    "@pinia/colada": "^0.17.0",
+    "@vueuse/core": "^13.3.0",
     "mande": "^2.0.9",
-    "pinia": "^3.0.2",
-    "vue": "^3.5.14",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.16",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@pinia/colada-devtools": "^0.0.2",
+    "@pinia/colada-devtools": "^0.1.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.15.21",
@@ -29,7 +29,7 @@
     "autoprefixer": "^10.4.21",
     "daisyui": "^4.12.23",
     "npm-run-all2": "^7.0.2",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.4",
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",

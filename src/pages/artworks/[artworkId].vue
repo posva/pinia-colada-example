@@ -223,6 +223,7 @@ dl.grid {
 dl h2 {
   @apply font-bold;
 }
+
 dl dt {
   @apply pr-6;
 }

@@ -1,14 +1,11 @@
 import {
-  computed,
   nextTick,
   ref,
   toValue,
   watch,
-  type ComputedRef,
   type MaybeRefOrGetter,
   type Ref,
   type UnwrapRef,
-  type WritableComputedRef,
 } from 'vue'
 import {
   type LocationQuery,
@@ -359,11 +356,6 @@ export function useRouteQuery<T extends Record<string, unknown>>(
 
   return queryValue
 }
-
-function parseQueryObject<T extends Record<string, unknown>>(
-  query: LocationQuery,
-  defaultValues: T
-): T {}
 
 function __test() {
   const f = useRouteQuery<{ a: number | undefined }>(
