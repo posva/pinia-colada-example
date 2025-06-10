@@ -7,20 +7,19 @@ export const useArtworkSearchResults = defineQuery(() => {
   const route = useRoute()
 
   const searchText = useRouteQueryValue<string>('q')
+  const page = useRouteQueryValue('page', 1)
 
   const filters = useRouteQuery<{
     is_public_domain?: boolean
-    // color: ArtworkColor
-    place_ids: string
-    date_range: [start: string, end: string]
-    page: number
+    // color?: ArtworkColor
+    place_ids?: string
+    date_range?: [start: string, end: string]
   }>(
     {
       is_public_domain: undefined,
       // color: undefined,
       place_ids: undefined,
       date_range: undefined,
-      page: 1,
     },
     {
       deleteIf(value, key) {
@@ -29,10 +28,6 @@ export const useArtworkSearchResults = defineQuery(() => {
         // }
         if (key === 'is_public_domain') {
           return value == null
-        }
-        if (key === 'page') {
-          const v = Number(value)
-          return !Number.isFinite(v) || v <= 1
         }
         return false
       },
@@ -45,24 +40,33 @@ export const useArtworkSearchResults = defineQuery(() => {
       is_public_domain: undefined,
       date_range: undefined,
       place_ids: undefined,
-      page: 1,
     }
+    page.value = 1
   }
 
   const query = useQuery({
     staleTime: 1000 * 60 * 60, // 1 hour
     key: () => [
       'artwork-search',
-      { q: route.query.q, ...filters.value, limit: 12 },
+      {
+        q: route.query.q,
+        limit: 12,
+        ...filters.value,
+      },
     ],
     async query() {
+      // TODO: build the query if any value is not undefined
+      const searchQuery = undefined
       return searchArtworks({
         q: String(route.query.q),
-        page: filters.value.page,
+        page: page.value,
         limit: 12,
-        term: {
-          //   is_public_domain: filters.value.is_public_domain,
-        },
+        query: searchQuery,
+        // query: {
+        // term: {
+        //   is_public_domain: filters.value.is_public_domain,
+        // },
+        // },
       })
     },
     placeholderData: (oldData) => oldData,
@@ -70,33 +74,31 @@ export const useArtworkSearchResults = defineQuery(() => {
 
   function hasNextPage() {
     const state = query.state.value
-    const page = Number(filters.value.page)
+    const p = page.value
     return (
-      state.data &&
-      Number.isFinite(page) &&
-      page < state.data.pagination.total_pages
+      state.data && Number.isFinite(p) && p < state.data.pagination.total_pages
     )
   }
 
   function nextPage() {
-    if (filters.value.page == null || !hasNextPage()) return
-    filters.value.page++
+    if (page.value == null || !hasNextPage()) return
+    page.value++
   }
 
   function previousPage() {
-    if (filters.value.page == null || filters.value.page <= 1) return
-    filters.value.page--
+    if (page.value == null || page.value <= 1) return
+    page.value--
   }
 
   function hasPreviousPage() {
     const state = query.state.value
-    const page = Number(filters.value.page)
-    return state.data && Number.isFinite(page) && page > 1
+    return state.data && Number.isFinite(page) && page.value > 1
   }
 
   return {
     ...query,
     searchText,
+    page,
     filters,
     resetFilters,
     hasNextPage,

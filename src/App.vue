@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useRouteQueryValue } from './composables/router'
+import { PiniaColadaDevtools } from '@pinia/colada-devtools'
 
 const searchText = useRouteQueryValue<string>('q')
 const router = useRouter()
@@ -69,4 +70,6 @@ async function goToSearch() {
   </header>
 
   <RouterView />
+
+  <PiniaColadaDevtools />
 </template>

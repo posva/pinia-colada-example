@@ -91,6 +91,15 @@ export const DEFAULT_OPTIONS = {
   null | undefined | Record<string, unknown> | number | string | unknown[]
 >
 
+/**
+ * Creates a reactive value that is synced with the query string of the current
+ * route. Allows passing a custom default value and parser/serializer
+ * functions.
+ *
+ * @param name - name on the url query
+ * @param defaultValue - default value for the query
+ * @param options - optional options to customize the behavior
+ */
 export function useRouteQueryValue<T extends string>(
   name: string,
   defaultValue?: T,
@@ -118,7 +127,8 @@ export function useRouteQueryValue<T>(
 
   const queryValue = ref<T | undefined>(
     name in $route.query ? parse($route.query[name]) : toValue(defaultValue)
-  )
+    // simplifies the type resolution
+  ) as Ref<UnwrapRef<T> | undefined>
 
   watch(
     () => parse($route.query[name]),
@@ -161,14 +171,39 @@ export function useRouteQueryValue<T>(
   return queryValue
 }
 
-interface UseRouteQueryOptions<T extends Record<string, unknown>> {
-  parse?: (rawValue: LocationQuery) => Partial<T>
+type _A1 = {
+  a: number | undefined
+}
+type _A2 = {
+  a: number
+}
+type _A3 = {
+  a?: number
+}
+type _C = number | undefined
 
-  serialize?: (parsedValue: Partial<T>) => LocationQueryRaw
+/**
+ * Detects if a type object has at least one optional or possibly undefined key.
+ * @internal
+ */
+type _HasOptional<T> = {
+  [K in keyof T]: undefined extends T[K] ? K : never
+}[keyof T] extends never
+  ? false
+  : true
+
+type _T1 = _HasOptional<_A1>
+type _T2 = _HasOptional<_A2>
+type _T3 = _HasOptional<_A3>
+
+interface UseRouteQueryOptions<T extends Record<string, unknown>> {
+  parse: (rawValue: LocationQuery) => Partial<T>
+
+  serialize: (parsedValue: Partial<T>) => LocationQueryRaw
 
   // deleteIf?: <K extends keyof T>(parsedValue: T[NoInfer<K>], key: K) => boolean
 
-  deleteIf?: (...args: ValueAndKeys<T>) => boolean
+  deleteIf: (...args: ValueAndKeys<T>) => boolean
 }
 
 type ValueAndKeys<T> = {
@@ -247,10 +282,17 @@ type D1 = EmptyFields<OriginalReqWithPartial>
 type OriginalPartialWithReq = Required<OriginalPartial>
 type D2 = EmptyFields<OriginalPartialWithReq> // bugged
 
+// export function useRouteQuery<T extends Record<string, NonNullable<unknown>>>(
+//   defaultValue: WithUndefined<T> | (() => WithUndefined<T>)
+// ): Ref<T>
+// export function useRouteQuery<T extends Record<string, NonNullable<unknown>>>(
+//   defaultValue: T | (() => T),
+//   options: UseRouteQueryOptions<NoInfer<T>>
+// ): Ref<T>
 export function useRouteQuery<T extends Record<string, unknown>>(
-  defaultValue: WithUndefined<T> | (() => WithUndefined<T>),
-  options?: UseRouteQueryOptions<NoInfer<T>>
-): Ref<WithUndefined<T>> {
+  defaultValue: T | (() => T),
+  options?: Partial<UseRouteQueryOptions<NoInfer<T>>>
+): Ref<T> {
   const $route = useRoute()
   const $router = useRouter()
 
@@ -316,6 +358,29 @@ export function useRouteQuery<T extends Record<string, unknown>>(
   )
 
   return queryValue
+}
+
+function parseQueryObject<T extends Record<string, unknown>>(
+  query: LocationQuery,
+  defaultValues: T
+): T {}
+
+function __test() {
+  const f = useRouteQuery<{ a: number | undefined }>(
+    {
+      a: undefined,
+    },
+    {}
+  )
+  useRouteQuery({ page: 1, q: '' })
+  useRouteQuery({ a: 2 }, {})
+  useRouteQuery(
+    { a: 2 },
+    {
+      // @ts-expect-error: a must be a string
+      parse: (q) => ({ a: 'hey' }),
+    }
+  )
 }
 
 function pickFrom<

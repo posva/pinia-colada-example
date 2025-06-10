@@ -9,6 +9,7 @@ const {
   asyncStatus,
   filters,
   searchText,
+  page,
   resetFilters,
   nextPage,
   hasNextPage,
@@ -86,7 +87,7 @@ const {
               «
             </button>
             <button class="join-item btn">
-              Page {{ filters.page }} /
+              Page {{ page }} /
               {{ searchResults.data?.pagination.total_pages }}
             </button>
             <button
